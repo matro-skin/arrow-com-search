@@ -4,6 +4,8 @@
         "vlucas/phpdotenv": "^4.1"
     },
     "autoload": {
-        "ArrowComSearch\\OAuth": "src/OAuth"
+        "psr-4": {
+            "ArrowComSearch\\": "src"
+        }
     }
 }
