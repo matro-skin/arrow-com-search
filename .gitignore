@@ -1,0 +1,7 @@
+api/vendor
+api/.env
+api/composer.lock
+dist
+node_modules
+package-lock.json
+.idea
