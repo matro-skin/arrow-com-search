@@ -1,5 +1,6 @@
 api/vendor
 api/.env
+api/.token
 api/composer.lock
 dist
 node_modules
