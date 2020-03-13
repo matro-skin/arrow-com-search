@@ -1,8 +1,9 @@
 {
     "require": {
         "guzzlehttp/guzzle": "^6.5",
-        "vlucas/phpdotenv": "^4.1"
-    },
+        "vlucas/phpdotenv": "^4.1",
+		"ext-json": "*"
+	},
     "autoload": {
         "psr-4": {
             "ArrowComSearch\\": "src"

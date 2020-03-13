@@ -1,5 +1,6 @@
 <?php
+define('API_DIR', __DIR__);
 require __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+$search = new \ArrowComSearch\Search();
+$search->getResponse();

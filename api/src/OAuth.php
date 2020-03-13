@@ -2,10 +2,6 @@
 
 namespace ArrowComSearch;
 
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7;
-use GuzzleHttp\Client;
-
 class OAuth {
 
 	private $username;
@@ -32,10 +28,24 @@ class OAuth {
 	 */
 	public function getToken()
 	{
+		// try load token from $this->file
 		$this->loadToken();
+
+		// if token not exists
 		if(! $this->token) {
+
+			// request token data
 			$this->requestToken();
+
+			// append expires_at field
+			// for checking if token being expired
+			$this->appendExpiresAt();
+
+			// store token data to $this->file
+			$this->storeToken();
+
 		}
+
 		return $this->token;
 	}
 
@@ -46,7 +56,6 @@ class OAuth {
 	 */
 	private function loadToken()
 	{
-
 		if(! file_exists( $this->file )) {
 			$this->token = null;
 			return;
@@ -64,85 +73,62 @@ class OAuth {
 			$this->token = null;
 			return;
 		}
-
 	}
 
 	/**
 	 * Request token from API
+	 *
+	 * @return void
 	 */
 	private function requestToken()
 	{
+		$request = new Request( $this->url );
 
-		$options = [
-			'headers' => [ 'client_id' => $this->username ],
-			'query'   => [ 'grant_type' => 'client_credentials' ],
-			'auth'    => [ $this->username, $this->password ]
-		];
+		$request->setQuery([ 'grant_type' => 'client_credentials' ])
+		        ->setHeaders([ 'client_id' => $this->username ])
+		        ->setAuth([ $this->username, $this->password ]);
 
-		try {
-			$client = new Client();
-			$response = $client->request('POST', $this->url, $options);
-		}
-		catch (RequestException $e) {
-
-			$response = Psr7\str( $e->getResponse() );
-			$response = substr( $response, strpos($response,'{"') );
-			$response = json_decode($response);
-
-			Response::error( $response->error_description );
-
-		}
-
-		$code = $response->getStatusCode();
-		if( $code > 200 ) {
-			Response::error('Invalid response', $code);
-		}
-
-		$this->token = $response->getBody();
-
-		$this->appendExpiredAt();
-		$this->storeToken();
-
+		$this->token = $request->getResponse();
 	}
 
 	/**
 	 * Add "expires_at" to token object
+	 *
+	 * @return void
 	 */
-	private function appendExpiredAt()
+	private function appendExpiresAt()
 	{
-
 		$token = (string) $this->token;
 		$token = json_decode($token,true);
 
 		$token['expires_at'] = time() + $token['expires_in'];
-
-		// let decrease in a minute...
-		$token['expires_at'] -= 60;
+		$token['expires_at'] -= 60; // let decrease in a minute...
 
 		$this->token = json_encode($token);
-
 	}
 
 	/**
-	 * Store token to file
+	 * Store token to $this->file
+	 *
+	 * @return void
 	 */
 	private function storeToken()
 	{
 		if(! file_put_contents($this->file, $this->token)) {
 			Response::error('Store token failed');
 		}
+
 		$this->loadToken();
 	}
 
 	/**
-	 * Get env variables
+	 * Get .env variables
 	 *
 	 * @throws \Exception
 	 * @return void
 	 */
 	private function env()
 	{
-
 		$this->username = getenv('OAUTH_USERNAME');
 		if(! $this->username) {
 			throw new \Exception('Undefined OAuth username');
@@ -152,7 +138,6 @@ class OAuth {
 		if(! $this->password) {
 			throw new \Exception('Undefined OAuth password');
 		}
-
 	}
 
 }
