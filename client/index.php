@@ -15,6 +15,9 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+	<script>const arrowComSearchUrl = 'http://vue-arrow-com.local/api';</script>
 	<script src="dist/js/app.js?t=<?php echo filemtime(__DIR__ . '/dist/js/app.js') ?>"></script>
+
 </body>
 </html>
