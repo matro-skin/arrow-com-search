@@ -2,9 +2,7 @@
 
 namespace ArrowComSearch;
 
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 class Request {
 
@@ -34,14 +32,7 @@ class Request {
 			$response = $client->request('POST', $this->url, $this->getOptions() );
 		}
 		catch (\Exception $e) {
-//		catch (RequestException $e) {
-
-//			$response = Psr7\str( $e->getResponse() );
-//			$response = substr( $response, strpos($response,'{"') );
-//			$response = json_decode($response);
-//
-//			// if request failed
-//			Response::error( $response->error_description );
+			// if request failed
 			Response::error( $e->getMessage() );
 
 		}
