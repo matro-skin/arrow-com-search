@@ -51,11 +51,11 @@ class Search {
 			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
 		])->setQuery( $this->getQuery() );
 
-		$response = $this->seed();
-//		$response = $request->getResponse();
+//		$response = $this->seed();
+		$response = $request->getResponse();
 
 		Response::success([
-			'data' => $response,
+			'data' => json_decode($response),
 		]);
 
 	}
@@ -82,10 +82,10 @@ class Search {
 	private function getQuery()
 	{
 		return [
-			'billTo' => $this->billTo,
-			'shipTo' => $this->shipTo,
+//			'billTo' => $this->billTo,
+//			'shipTo' => $this->shipTo,
 			'currency' => $this->currency,
-			'quantity' => $this->quantity,
+//			'quantity' => $this->quantity,
 			'limit' => $this->limit,
 			'search' => $this->term
 		];

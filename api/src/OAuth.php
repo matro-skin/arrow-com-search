@@ -88,7 +88,7 @@ class OAuth {
 		        ->setHeaders([ 'client_id' => $this->username ])
 		        ->setAuth([ $this->username, $this->password ]);
 
-		$this->token = $request->getResponse();
+		$this->token = $request->getResponse('POST');
 	}
 
 	/**

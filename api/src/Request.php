@@ -23,18 +23,17 @@ class Request {
 	/**
 	 * Return request body
 	 *
-	 * @return \Psr\Http\Message\StreamInterface
+	 * @return string
 	 */
-	public function getResponse()
+	public function getResponse($method = 'GET')
 	{
 		try {
 			$client = new Client();
-			$response = $client->request('POST', $this->url, $this->getOptions() );
+			$response = $client->request($method, $this->url, $this->getOptions() );
 		}
 		catch (\Exception $e) {
 			// if request failed
 			Response::error( $e->getMessage() );
-
 		}
 
 		$code = $response->getStatusCode();
@@ -43,7 +42,7 @@ class Request {
 			Response::error('Invalid response', $code);
 		}
 
-		return $response->getBody();
+		return (string) $response->getBody()->getContents();
 	}
 
 	/**
@@ -78,6 +77,7 @@ class Request {
 	 */
 	public function setHeaders( array $headers ): Request {
 		$this->headers = $headers;
+		$this->headers['User-Agent'] = 'Moliza/5.0';
 
 		return $this;
 	}
