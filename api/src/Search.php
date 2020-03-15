@@ -40,7 +40,7 @@ class Search {
 	/**
 	 * Return response from Arrow.com API
 	 *
-	 * @return string
+	 * @return void
 	 */
 	public function getResponse()
 	{
@@ -51,11 +51,12 @@ class Search {
 			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
 		])->setQuery( $this->getQuery() );
 
-		Response::success([
-			'data' => $this->seed(),
-		]);
+		$response = $this->seed();
+//		$response = $request->getResponse();
 
-//		return $request->getResponse();
+		Response::success([
+			'data' => $response,
+		]);
 
 	}
 
