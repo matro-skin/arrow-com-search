@@ -5,4 +5,4 @@ Vue.component('Search', Search);
 
 new Vue({
 	render: h => h(Search)
-}).$mount('#arrow-com-search');
+}).$mount('#vue-parts-search');

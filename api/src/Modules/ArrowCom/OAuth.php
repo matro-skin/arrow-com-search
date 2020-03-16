@@ -12,7 +12,7 @@ class OAuth {
 	private $url = 'https://my.arrow.com/api/security/oauth/token';
 
 	public $token;
-	private $file = API_DIR . '/.token_ArrowCom';
+	private $file = ENV_PATH . '/.token_ArrowCom';
 
 	public function __construct()
 	{

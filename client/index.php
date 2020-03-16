@@ -9,15 +9,14 @@
 <body>
 	<div class="container">
 		<div class="p-5">
-			<div id="arrow-com-search"></div>
+			<div id="vue-parts-search"></div>
 		</div>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
+	<!-- PUT THIS -->
 	<script>const partsSearchConfig = { url: '/api', drivers: [ 'ArrowCom', 'Element14' ] }</script>
 	<script src="dist/js/partsSearch.js?t=<?php echo filemtime(__DIR__ . '/dist/js/partsSearch.js') ?>"></script>
+	<!-- / END -->
 
 </body>
 </html>

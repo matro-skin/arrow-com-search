@@ -1,6 +1,6 @@
 <?php
-define('API_DIR', __DIR__);
-require API_DIR . '/vendor/autoload.php';
+define('ENV_PATH', __DIR__);
+require __DIR__ . '/vendor/autoload.php';
 
 $search = new \PartsSearch\Search;
 $search->getResponse();

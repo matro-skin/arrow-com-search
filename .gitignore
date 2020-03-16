@@ -1,4 +1,3 @@
-api/vendor
 api/.env
 api/.token*
 api/composer.lock

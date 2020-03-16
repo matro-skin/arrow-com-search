@@ -41,7 +41,7 @@ class Search {
 	protected function env()
 	{
 		try {
-			Dotenv::createImmutable(API_DIR )->load();
+			Dotenv::createImmutable(ENV_PATH )->load();
 		}
 		catch (\Exception $e) {
 			Response::error( $e->getMessage() );
