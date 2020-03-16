@@ -9,11 +9,15 @@
 <body>
 	<div class="container">
 		<div class="p-5">
+
+			<!-- SEARCH FORM -->
 			<div id="vue-parts-search"></div>
+			<!-- / END -->
+
 		</div>
 	</div>
 
-	<!-- PUT THIS -->
+	<!-- FOOTER -->
 	<script>const partsSearchConfig = { url: '/api', drivers: [ 'ArrowCom', 'Element14' ] }</script>
 	<script src="dist/js/partsSearch.js?t=<?php echo filemtime(__DIR__ . '/dist/js/partsSearch.js') ?>"></script>
 	<!-- / END -->
