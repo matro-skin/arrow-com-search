@@ -10,4 +10,6 @@ interface ShouldRespond {
 
 	public function setQuery();
 
+	public function collection(array $response);
+
 }

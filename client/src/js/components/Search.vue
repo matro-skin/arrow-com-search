@@ -7,7 +7,6 @@
 			       id="arrow-com-search-input"
 			       placeholder="Type to search..." @change="offset = 0" />
 			<button type="submit" ref="submit" :disabled="searching || query.length === 0" v-html="searching ? 'Searching...' : 'Search'" />
-			offset: {{ offset }}
 		</form>
 		<div class="arrowComSearch__result" v-if="items.length > 0">
 			<div class="arrowComSearch__total">
@@ -43,6 +42,7 @@
 		data() {
 			return {
 
+				validConfig: false,
 				loaded: false,
 				searching: false,
 				query: 'TL431ID',
@@ -56,36 +56,35 @@
 
 			sortedByPartNumber() {
 				return this.items.sort((a,b) => (a.partNumber.toLowerCase() > b.partNumber.toLowerCase()) ? 1 : ((b.partNumber.toLowerCase() > a.partNumber.toLowerCase()) ? -1 : 0));
-			},
-
-			url() {
-				return `${arrowComSearchUrl}?search=${this.query}&offset=${this.offset}`
 			}
 
 		},
 
 		methods: {
 
+			getUrl(driver) {
+				return `${partsSearchConfig.url}?driver=${driver}&search=${this.query}&offset=${this.offset}`
+			},
+
 			async submit() {
 
-				for (let i = 0; i < 5; i++) {
-					let response = await this.load(),
-						items = response.pricingResponse;
-					this.items = [ ...this.items, ...items ];
-					this.offset += items.length
-					// console.log('response', response);
-					// this.items = [ ...this.items, ...await this.load() ]
+				for(let driver of partsSearchConfig.drivers) {
+					let response = await this.load(driver),
+						items = response.items;
+					// todo: uncomment when collection will be ready
+					// this.items = [ ...this.items, ...items ];
+					// this.offset += items.length
 				}
 
 			},
 
-			async load() {
+			async load(driver) {
 
 				return await new Promise((resolve, reject) => {
 
 					this.searching = true;
 
-					axios.get(this.url)
+					axios.get( this.getUrl(driver) )
 						.then(response => {
 							resolve( response.data.data )
 						})
@@ -105,9 +104,29 @@
 		},
 
 		mounted() {
-			if(typeof arrowComSearchUrl === 'undefined') {
-				console.error('Undefined const arrowComSearchUrl');
+
+			if(typeof partsSearchConfig === 'undefined') {
+				console.error('Undefined const partsSearchConfig');
+				return;
 			}
+
+			if(typeof partsSearchConfig.url === 'undefined') {
+				console.error('Undefined const partsSearchConfig.url');
+				return;
+			}
+
+			if(typeof partsSearchConfig.drivers === 'undefined') {
+				console.error('Undefined const partsSearchConfig.drivers');
+				return;
+			}
+
+			if(partsSearchConfig.drivers.length === 0) {
+				console.error('Empty partsSearchConfig.drivers');
+				return;
+			}
+
+			this.validConfig = true;
+
 		}
 
 	}

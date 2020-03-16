@@ -1,6 +1,6 @@
 <?php
 
-namespace PartsSearch\Modules\ArrowCom;
+namespace PartsSearch\Modules\Element14;
 
 use PartsSearch\Interfaces\ShouldRespond;
 use PartsSearch\Helpers\Request;
@@ -9,28 +9,15 @@ use PartsSearch\Helpers\Response;
 class Search implements ShouldRespond {
 
 	/*
-	 * OAuth token
-	 */
-	private $token;
-
-	/*
 	 * Request query components
 	 */
-	public $url = 'https://my.arrow.com/api/priceandavail/search';
-	public $currency = 'RUB';
-	public $limit = 10;
+	public $url = 'https://api.element14.com/catalog/products';
 	public $term = '';
+	public $offset = 0;
 
 	public function __construct()
 	{
-
-		// get OAuth token
-		$oauth = new OAuth();
-		$this->token = $oauth->getToken();
-
-		// append GET to query
 		$this->setQuery();
-
 	}
 
 	/**
@@ -42,10 +29,7 @@ class Search implements ShouldRespond {
 	{
 
 		$request = new Request( $this->url );
-		$request->setHeaders([
-			'Accept' => 'application/json',
-			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
-		])->setQuery( $this->getQuery() );
+		$request->setQuery( $this->getQuery() );
 
 		$response = $request->getResponse();
 
@@ -63,9 +47,15 @@ class Search implements ShouldRespond {
 	public function getQuery()
 	{
 		return [
-			'currency' => $this->currency,
-			'limit' => $this->limit,
-			'search' => $this->term
+			'storeInfo.id' => 'ru.farnell.com',
+			'resultsSettings.offset' => $this->offset,
+			'resultsSettings.numberOfResults' => 10,
+			'resultsSettings.refinements.filters' => 'inStock',
+			'resultsSettings.responseGroup' => 'medium',
+			'callInfo.omitXmlSchema' => 'false',
+			'callInfo.responseDataFormat' => 'json',
+			'callinfo.apiKey' => getenv('ELEMENT14_API_KEY'),
+			'term' => 'any:' . $this->term
 		];
 	}
 
@@ -77,6 +67,7 @@ class Search implements ShouldRespond {
 	public function setQuery()
 	{
 		$this->term = trim( $_REQUEST['search'] );
+		$this->offset = (int) $_REQUEST['offset'];
 	}
 
 	public function collection( array $response ) {

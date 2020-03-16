@@ -132,12 +132,12 @@ class OAuth {
 	 */
 	private function env()
 	{
-		$this->username = getenv('OAUTH_USERNAME');
+		$this->username = getenv('ARROWCOM_OAUTH_USERNAME');
 		if(! $this->username) {
 			throw new \Exception('Undefined OAuth username');
 		}
 
-		$this->password = getenv('OAUTH_PASSWORD');
+		$this->password = getenv('ARROWCOM_OAUTH_PASSWORD');
 		if(! $this->password) {
 			throw new \Exception('Undefined OAuth password');
 		}
