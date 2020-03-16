@@ -5,17 +5,18 @@
 			<input type="search" v-model="query"
 			       :readonly="searching"
 			       id="arrow-com-search-input"
-			       placeholder="Type to search..." />
+			       placeholder="Type to search..." @change="offset = 0" />
 			<button type="submit" ref="submit" :disabled="searching || query.length === 0" v-html="searching ? 'Searching...' : 'Search'" />
+			offset: {{ offset }}
 		</form>
 		<div class="arrowComSearch__result" v-if="items.length > 0">
 			<div class="arrowComSearch__total">
 				Найдено позиций: {{ items.length }}
 			</div>
 			<div class="arrowComSearch__items row">
-				<div v-for="item in sortedByLabel" :key="item.id" class="col-md-3">
+				<div v-for="item in sortedByPartNumber" :key="item.itemId" class="col-md-3">
 					<div class="card mb-3">
-						<div class="card-header" v-html="item.id" />
+						<div class="card-header" v-html="item.itemId" />
 						<div class="card-body">
 							<pre v-html="item" />
 						</div>
@@ -45,19 +46,16 @@
 				loaded: false,
 				searching: false,
 				query: 'TL431ID',
-				items: []
+				items: [],
+				offset: 0
 
 			}
 		},
 
 		computed: {
 
-			sortedByLabel() {
-				return this.items.sort((a,b) => (a.label.toLowerCase() > b.label.toLowerCase()) ? 1 : ((b.label.toLowerCase() > a.label.toLowerCase()) ? -1 : 0));
-			},
-
-			offset() {
-				return this.items.length
+			sortedByPartNumber() {
+				return this.items.sort((a,b) => (a.partNumber.toLowerCase() > b.partNumber.toLowerCase()) ? 1 : ((b.partNumber.toLowerCase() > a.partNumber.toLowerCase()) ? -1 : 0));
 			},
 
 			url() {
@@ -71,13 +69,17 @@
 			async submit() {
 
 				for (let i = 0; i < 5; i++) {
-					this.items = [ ...this.items, ...await this.load() ]
+					let response = await this.load(),
+						items = response.pricingResponse;
+					this.items = [ ...this.items, ...items ];
+					this.offset += items.length
+					// console.log('response', response);
+					// this.items = [ ...this.items, ...await this.load() ]
 				}
 
 			},
 
 			async load() {
-
 
 				return await new Promise((resolve, reject) => {
 
@@ -85,7 +87,6 @@
 
 					axios.get(this.url)
 						.then(response => {
-							// resolve(Object.assign([],[ ...this.items, ...response.data.data ]) )
 							resolve( response.data.data )
 						})
 						.catch(error => {

@@ -1,6 +1,6 @@
 <?php
 
-namespace ArrowComSearch;
+namespace PartsSearch\Helpers;
 
 class Response {
 

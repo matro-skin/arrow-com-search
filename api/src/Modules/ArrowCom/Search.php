@@ -1,10 +1,13 @@
 <?php
 
-namespace ArrowComSearch;
+namespace PartsSearch\Modules\ArrowCom;
 
+use PartsSearch\Interfaces\ShouldRespond;
+use PartsSearch\Helpers\Request;
+use PartsSearch\Helpers\Response;
 use Dotenv\Dotenv;
 
-class Search {
+class Search implements ShouldRespond {
 
 	/*
 	 * OAuth token
@@ -15,10 +18,7 @@ class Search {
 	 * Request query components
 	 */
 	public $url = 'https://my.arrow.com/api/priceandavail/search';
-	public $billTo = 0;
-	public $shipTo = 0;
 	public $currency = 'RUB';
-	public $quantity = 1;
 	public $limit = 10;
 	public $term = '';
 
@@ -51,7 +51,6 @@ class Search {
 			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
 		])->setQuery( $this->getQuery() );
 
-//		$response = $this->seed();
 		$response = $request->getResponse();
 
 		Response::success([
@@ -79,13 +78,10 @@ class Search {
 	 *
 	 * @return array
 	 */
-	private function getQuery()
+	public function getQuery()
 	{
 		return [
-//			'billTo' => $this->billTo,
-//			'shipTo' => $this->shipTo,
 			'currency' => $this->currency,
-//			'quantity' => $this->quantity,
 			'limit' => $this->limit,
 			'search' => $this->term
 		];
@@ -96,35 +92,9 @@ class Search {
 	 *
 	 * @return void
 	 */
-	private function setQuery()
+	public function setQuery()
 	{
-		$this->term = trim( $_GET['search'] );
-	}
-
-	private function seed()
-	{
-
-		sleep(1);
-
-		$id = time() + mt_rand(1000,2000);
-		$data = [];
-
-		for($i = 0; $i < $this->limit; $i++) {
-			$data[] = [
-				'id' => $id + $i,
-				'label' => self::generateRandomString( mt_rand(4,6) ),
-				'attr1' => self::generateRandomString( mt_rand(6,8) ),
-				'attr2' => self::generateRandomString( mt_rand(6,8) ),
-				'attr3' => self::generateRandomString( mt_rand(6,8) ),
-			];
-		}
-
-		return $data;
-
-	}
-
-	public static function generateRandomString($length = 10) {
-		return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+		$this->term = trim( $_REQUEST['search'] );
 	}
 
 }

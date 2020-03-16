@@ -1,9 +1,10 @@
 api/vendor
 api/.env
-api/.token
+api/.token*
 api/composer.lock
 client/dist
 client/node_modules
 client/package-lock.json
 .idea
 /client/npm-debug.log
+/client/debug.log

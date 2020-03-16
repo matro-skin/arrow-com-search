@@ -1,6 +1,9 @@
 <?php
 
-namespace ArrowComSearch;
+namespace PartsSearch\Modules\ArrowCom;
+
+use PartsSearch\Helpers\Request;
+use PartsSearch\Helpers\Response;
 
 class OAuth {
 
@@ -9,7 +12,7 @@ class OAuth {
 	private $url = 'https://my.arrow.com/api/security/oauth/token';
 
 	public $token;
-	private $file = API_DIR . '/.token';
+	private $file = API_DIR . '/.token_ArrowCom';
 
 	public function __construct()
 	{
