@@ -6,7 +6,7 @@ module.exports = {
 		'./src/js/app.js',
 	],
 	output: {
-		filename: './js/app.js'
+		filename: './js/partsSearch.js'
 	},
 	module: {
 		rules: [

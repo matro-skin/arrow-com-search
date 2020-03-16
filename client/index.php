@@ -17,7 +17,7 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 	<script>const partsSearchConfig = { url: '/api', drivers: [ 'ArrowCom', 'Element14' ] }</script>
-	<script src="dist/js/app.js?t=<?php echo filemtime(__DIR__ . '/dist/js/app.js') ?>"></script>
+	<script src="dist/js/partsSearch.js?t=<?php echo filemtime(__DIR__ . '/dist/js/partsSearch.js') ?>"></script>
 
 </body>
 </html>
