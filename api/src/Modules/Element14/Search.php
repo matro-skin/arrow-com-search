@@ -128,7 +128,7 @@ class Search implements ShouldRespond {
 			'name'               => $item['translatedManufacturerPartNumber'] ?? null,
 			'description'        => $item['displayName'] ?? null,
 			'partNumber'         => $item['translatedManufacturerPartNumber'] ?? null,
-			'external_id'        => (string) $item['id'],
+			'external_id'        => (string) $item['id'] ?? null,
 
 			'photo_ext_src'      => null,
 			'quantity'           => (int) $item['packSize'] ?? null,
