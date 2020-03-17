@@ -124,17 +124,17 @@ class Search implements ShouldRespond {
 	{
 		return [
 
-			'sku'                => $item['sku'],
-			'name'               => $item['translatedManufacturerPartNumber'],
-			'description'        => $item['displayName'],
-			'partNumber'         => $item['translatedManufacturerPartNumber'],
+			'sku'                => $item['sku'] ?? null,
+			'name'               => $item['translatedManufacturerPartNumber'] ?? null,
+			'description'        => $item['displayName'] ?? null,
+			'partNumber'         => $item['translatedManufacturerPartNumber'] ?? null,
 			'external_id'        => (string) $item['id'],
 
 			'photo_ext_src'      => null,
-			'quantity'           => (int) $item['packSize'],
-			'min_order_quantity' => (int) $item['translatedMinimumOrderQuality'],
+			'quantity'           => (int) $item['packSize'] ?? null,
+			'min_order_quantity' => (int) $item['translatedMinimumOrderQuality'] ?? null,
 			'unit_price'         => (float) isset($item['prices'][0]) ? $item['prices'][0]['cost'] : null,
-			'currency'           => $item['currency'] ?: 'EUR',
+			'currency'           => $item['currency'] ?? 'EUR',
 
 			'price_range' => array_map(function ($range) {
 				return [
@@ -142,7 +142,7 @@ class Search implements ShouldRespond {
 					'to' => (int) $range['to'],
 					'unit_price' => (float) $range['cost'],
 				];
-			}, $item['prices']),
+			}, $item['prices'] ?? []),
 			'cart_amount'        => 1,
 			'cart_amount_max'    => 10,
 

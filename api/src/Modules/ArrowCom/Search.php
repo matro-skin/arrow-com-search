@@ -148,17 +148,17 @@ class Search implements ShouldRespond {
 	private function parseItem(array $item)
 	{
 		return [
-			'sku'                => $item['warehouseCode'],
-			'name'               => $item['partNumber'],
-			'description'        => $item['description'],
-			'partNumber'         => $item['partNumber'],
-			'external_id'        => (string) $item['itemId'],
+			'sku'                => $item['warehouseCode'] ?? null,
+			'name'               => $item['partNumber'] ?? null,
+			'description'        => $item['description'] ?? null,
+			'partNumber'         => $item['partNumber'] ?? null,
+			'external_id'        => (string) $item['itemId'] ?? null,
 
 			'photo_ext_src'      => isset($item['urlData'][1]) ? $item['urlData'][1]['value'] : null,
-			'quantity'           => (int) $item['minOrderQuantity'],
-			'min_order_quantity' => (int) $item['minOrderQuantity'],
+			'quantity'           => (int) $item['minOrderQuantity'] ?? null,
+			'min_order_quantity' => (int) $item['minOrderQuantity'] ?? null,
 			'unit_price'         => (float) isset($item['pricingTier'][0]) ? $item['pricingTier'][0]['resalePrice'] : 0,
-			'currency'           => $item['currency'] ?: 'EUR',
+			'currency'           => $item['currency'] ?? 'EUR',
 
 			'price_range'        => [],
 			'cart_amount'        => 1,
