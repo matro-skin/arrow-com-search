@@ -1,6 +1,6 @@
 <template>
 	<div class="arrowComSearch__container">
-		<form method="post" ref="form" @submit.prevent="submit" class="arrowComSearch__form">
+		<form method="post" ref="form" @submit.prevent="submit(true)" class="arrowComSearch__form">
 			<label for="arrow-com-search-input">Search</label>
 			<input type="search" v-model="query"
 			       :readonly="searching"
@@ -13,16 +13,9 @@
 				Найдено позиций: {{ items.length }}
 			</div>
 			<div class="arrowComSearch__items row">
-				<div v-for="item in sortedByPartNumber" :key="item.itemId" class="col-md-3">
-					<div class="card mb-3">
-						<div class="card-header" v-html="item.itemId" />
-						<div class="card-body">
-							<pre v-html="item" />
-						</div>
-					</div>
-				</div>
+				<Item v-for="item in sortedByExtId" :key="item.loop_key" :item="item" />
 			</div>
-			<div class="arrowComSearch__more">
+			<div class="arrowComSearch__more" v-show="false">
 				<button type="button" :disabled="searching" v-html="searching ? 'Поиск...' : 'Загрузить еще'" @click="$refs.submit.click()" />
 			</div>
 		</div>
@@ -36,7 +29,8 @@
 </template>
 
 <script>
-	import axios from 'axios'
+	import axios from "axios"
+	import Item from "./Item"
 	export default {
 
 		data() {
@@ -45,7 +39,7 @@
 				validConfig: false,
 				loaded: false,
 				searching: false,
-				query: 'TL431ID',
+				query: '',
 				items: [],
 				offset: 0
 
@@ -54,8 +48,10 @@
 
 		computed: {
 
-			sortedByPartNumber() {
-				return this.items.sort((a,b) => (a.partNumber.toLowerCase() > b.partNumber.toLowerCase()) ? 1 : ((b.partNumber.toLowerCase() > a.partNumber.toLowerCase()) ? -1 : 0));
+			sortedByExtId() {
+				return this.items.sort((a,b) => (a.external_id.toLowerCase() > b.external_id.toLowerCase())
+					? 1
+					: ((b.external_id.toLowerCase() > a.external_id.toLowerCase()) ? -1 : 0));
 			}
 
 		},
@@ -66,14 +62,17 @@
 				return `${partsSearchConfig.url}?driver=${driver}&search=${this.query}&offset=${this.offset}`
 			},
 
-			async submit() {
+			async submit(reset) {
+
+				if(reset) {
+					this.items = []
+				}
 
 				for(let driver of partsSearchConfig.drivers) {
 					let response = await this.load(driver),
-						items = response.items;
-					// todo: uncomment when collection will be ready
-					// this.items = [ ...this.items, ...items ];
-					// this.offset += items.length
+						items = response.data;
+					this.items = [ ...this.items, ...items ];
+					this.offset += items.length
 				}
 
 			},
@@ -86,7 +85,7 @@
 
 					axios.get( this.getUrl(driver) )
 						.then(response => {
-							resolve( response.data.data )
+							resolve( response.data )
 						})
 						.catch(error => {
 							console.error(error);
@@ -127,6 +126,10 @@
 
 			this.validConfig = true;
 
+		},
+
+		components: {
+			Item: Item
 		}
 
 	}

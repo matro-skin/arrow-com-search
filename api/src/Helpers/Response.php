@@ -10,10 +10,11 @@ class Response {
 	 */
 	public static function success($data)
 	{
-		if( gettype($data) === 'array') {
-			self::output($data);
+		if( gettype($data) === 'string' ) {
+			$data = json_decode($data,true);
 		}
-		self::output( json_decode($data,true));
+		$data['status'] = 'success';
+		self::output($data);
 	}
 
 	/**

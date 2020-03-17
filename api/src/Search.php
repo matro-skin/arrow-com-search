@@ -48,4 +48,9 @@ class Search {
 		}
 	}
 
+	public static function loop_key(array $resource)
+	{
+		return implode('_', [ $resource['sku'], $resource['partNumber'], $resource['external_id'] ]);
+	}
+
 }

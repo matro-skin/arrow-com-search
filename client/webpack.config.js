@@ -1,5 +1,5 @@
 const { VueLoaderPlugin } = require("vue-loader");
-// const Dotenv = require('dotenv-webpack');
+var CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 
 module.exports = {
 	entry: [
@@ -31,7 +31,10 @@ module.exports = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
-		// new Dotenv()
+		new CleanObsoleteChunks({
+			verbose: true, // Write logs to console
+			deep: true // Clean obsolete chunks of webpack child compilations
+		})
 	],
 	target: "web"
 };

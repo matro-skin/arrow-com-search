@@ -33,9 +33,7 @@ class Search implements ShouldRespond {
 
 		$response = $request->getResponse();
 
-		Response::success([
-			'data' => self::collection( json_decode($response,true) ),
-		]);
+		Response::success( self::collection( json_decode($response,true) ) );
 
 	}
 
@@ -70,9 +68,85 @@ class Search implements ShouldRespond {
 		$this->offset = (int) $_REQUEST['offset'];
 	}
 
-	public function collection( array $response ) {
-		// todo: parse collection
-		return $response;
+	public function collection( array $response )
+	{
+		$data = [];
+		foreach ($response['keywordSearchReturn']['products'] as $item) {
+			$resource = $this->parseItem($item);
+			$resource['loop_key'] = \PartsSearch\Search::loop_key($resource);
+			$data[] = $resource;
+		}
+
+		return [
+			'meta' => $this->meta( $response['keywordSearchReturn'] ),
+			'data' => $data,
+		];
+	}
+
+	private function meta(array $response)
+	{
+		return [
+			'results' => $response['numberOfResults'],
+			'pages' => 1,
+			'totalRecords' => $response['numberOfResults'],
+			'currentPage' => 1,
+			'nextPageNumber' => 1,
+		];
+	}
+
+	/*
+	 * Response item
+	 *
+	 * sku: "3124622"
+	 * displayName: "TEXAS INSTRUMENTS - TL431ID - Источник опорного напряжения, прецизионный, шунтирующий - регулируемый, серия TL431, 2.495В до 36В"
+	 * productStatus: "STOCKED"
+	 * packSize: 1
+	 * unitOfMeasure: "ШТУКА"
+	 * id: "pf_NA_3124622_0"
+	 * prices: [{to: 49, from: 5, cost: 0.266}, {to: 99, from: 50, cost: 0.245}, {to: 249, from: 100, cost: 0.156},…]
+	 * vendorName: "TEXAS INSTRUMENTS"
+	 * brandName: "TEXAS INSTRUMENTS"
+	 * translatedManufacturerPartNumber: "TL431ID"
+	 * translatedMinimumOrderQuality: 5
+	 * stock: {level: 3955, leastLeadTime: 43, status: 1, shipsFromMultipleWarehouses: false,…}
+	 * comingSoon: false
+	 * inventoryCode: 5
+	 * nationalClassCode: null
+	 * publishingModule: null
+	 * vatHandlingCode: "SLST"
+	 * releaseStatusCode: 4
+	 * isSpecialOrder: false
+	 * isAwaitingRelease: false
+	 * reeling: false
+	 * discountReason: 30
+	 */
+	private function parseItem(array $item)
+	{
+		return [
+
+			'sku'                => $item['sku'],
+			'name'               => $item['translatedManufacturerPartNumber'],
+			'description'        => $item['displayName'],
+			'partNumber'         => $item['translatedManufacturerPartNumber'],
+			'external_id'        => (string) $item['id'],
+
+			'photo_ext_src'      => null,
+			'quantity'           => (int) $item['packSize'],
+			'min_order_quantity' => (int) $item['translatedMinimumOrderQuality'],
+			'unit_price'         => (float) $item['prices'][0]['cost'],
+			'currency'           => $item['currency'] ?: 'EUR',
+
+			'price_range' => array_map(function ($range) {
+				return [
+					'from' => (int) $range['from'],
+					'to' => (int) $range['to'],
+					'unit_price' => (float) $range['cost'],
+				];
+			}, $item['prices']),
+			'cart_amount'        => 1,
+			'cart_amount_max'    => 10,
+
+		];
 	}
 
 }
