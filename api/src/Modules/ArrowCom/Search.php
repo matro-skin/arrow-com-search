@@ -154,10 +154,10 @@ class Search implements ShouldRespond {
 			'partNumber'         => $item['partNumber'],
 			'external_id'        => (string) $item['itemId'],
 
-			'photo_ext_src'      => $item['urlData'][1]['value'],
+			'photo_ext_src'      => isset($item['urlData'][1]) ? $item['urlData'][1]['value'] : null,
 			'quantity'           => (int) $item['minOrderQuantity'],
 			'min_order_quantity' => (int) $item['minOrderQuantity'],
-			'unit_price'         => (float) $item['pricingTier'][0]['resalePrice'],
+			'unit_price'         => (float) isset($item['pricingTier'][0]) ? $item['pricingTier'][0]['resalePrice'] : 0,
 			'currency'           => $item['currency'] ?: 'EUR',
 
 			'price_range'        => [],

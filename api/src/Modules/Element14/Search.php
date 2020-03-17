@@ -133,7 +133,7 @@ class Search implements ShouldRespond {
 			'photo_ext_src'      => null,
 			'quantity'           => (int) $item['packSize'],
 			'min_order_quantity' => (int) $item['translatedMinimumOrderQuality'],
-			'unit_price'         => (float) $item['prices'][0]['cost'],
+			'unit_price'         => (float) isset($item['prices'][0]) ? $item['prices'][0]['cost'] : null,
 			'currency'           => $item['currency'] ?: 'EUR',
 
 			'price_range' => array_map(function ($range) {
