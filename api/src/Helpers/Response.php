@@ -21,8 +21,9 @@ class Response {
 	 * @param string $message
 	 * @param int $code
 	 */
-	public static function error(string $message, int $code = 400)
+	public static function error($message, $code = 400)
 	{
+		http_response_code($code);
 		self::output([
 			'error' => $message,
 			'code' => $code,

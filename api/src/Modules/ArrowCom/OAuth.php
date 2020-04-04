@@ -19,7 +19,7 @@ class OAuth {
 		try {
 			$this->env();
 		} catch (\Exception $e) {
-			Response::error( $e->getMessage() );
+			Response::error( $e->getMessage(), 404 );
 		}
 	}
 
@@ -118,7 +118,7 @@ class OAuth {
 	private function storeToken()
 	{
 		if(! file_put_contents($this->file, $this->token)) {
-			Response::error('Store token failed');
+			Response::error('Store token failed', 400);
 		}
 
 		$this->loadToken();

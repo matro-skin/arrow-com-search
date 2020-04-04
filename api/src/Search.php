@@ -21,7 +21,7 @@ class Search {
 		$this->env();
 		$driver = sprintf( "\\PartsSearch\\Modules\\%s\\Search", $_REQUEST['driver'] );
 		if(! class_exists($driver)) {
-			Response::error('Invalid driver');
+			Response::error('Invalid driver',400);
 		}
 		$this->driver = new $driver();
 		return $this->driver;
