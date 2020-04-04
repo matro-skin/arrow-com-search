@@ -6,7 +6,8 @@ use PartsSearch\Interfaces\ShouldRespond;
 use PartsSearch\Helpers\Request;
 use PartsSearch\Helpers\Response;
 
-class Search implements ShouldRespond {
+class Search implements ShouldRespond
+{
 
 	/*
 	 * OAuth token
@@ -24,13 +25,16 @@ class Search implements ShouldRespond {
 	public function __construct()
 	{
 
+		\PartsSearch\Search::log('Start module');
+
 		// get OAuth token
-		$oauth = new OAuth();
+		$oauth       = new OAuth();
 		$this->token = $oauth->getToken();
+
+		\PartsSearch\Search::log('Token ready');
 
 		// append GET to query
 		$this->setQuery();
-
 	}
 
 	/**
@@ -41,16 +45,21 @@ class Search implements ShouldRespond {
 	public function getResponse()
 	{
 
-		$request = new Request( $this->url );
+		\PartsSearch\Search::log('Prepare request');
+
+		$request = new Request($this->url);
 		$request->setHeaders([
-			'Accept' => 'application/json',
+			'Accept'        => 'application/json',
 			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
-		])->setQuery( $this->getQuery() );
+		])->setQuery($this->getQuery());
+
+		\PartsSearch\Search::log('Requesting...');
 
 		$response = $request->getResponse();
 
-		Response::success( self::collection( json_decode($response,true) ) );
+		\PartsSearch\Search::log('Request ready');
 
+		Response::success(self::collection(json_decode($response, true)));
 	}
 
 	/**
@@ -62,8 +71,8 @@ class Search implements ShouldRespond {
 	{
 		return [
 			'currency' => $this->currency,
-			'limit' => $this->limit,
-			'search' => $this->term
+			'limit'    => $this->limit,
+			'search'   => $this->term
 		];
 	}
 
@@ -74,17 +83,16 @@ class Search implements ShouldRespond {
 	 */
 	public function setQuery()
 	{
-		$this->term = trim( $_REQUEST['search'] );
+		$this->term = trim($_REQUEST[ 'search' ]);
 	}
-
 
 	public function collection( array $response )
 	{
 		$data = [];
-		foreach ($response['pricingResponse'] as $item) {
-			$resource = $this->parseItem($item);
-			$resource['loop_key'] = \PartsSearch\Search::loop_key($resource);
-			$data[] = $resource;
+		foreach ($response[ 'pricingResponse' ] as $item) {
+			$resource               = $this->parseItem($item);
+			$resource[ 'loop_key' ] = \PartsSearch\Search::loop_key($resource);
+			$data[]                 = $resource;
 		}
 
 		return [
@@ -93,14 +101,14 @@ class Search implements ShouldRespond {
 		];
 	}
 
-	private function meta(array $response)
+	private function meta( array $response )
 	{
 		return [
-			'results' => $response['results'],
-			'pages' => $response['pages'],
-			'totalRecords' => $response['totalRecords'],
-			'currentPage' => $response['currentPage'],
-			'nextPageNumber' => $response['nextPageNumber'],
+			'results'        => $response[ 'results' ],
+			'pages'          => $response[ 'pages' ],
+			'totalRecords'   => $response[ 'totalRecords' ],
+			'currentPage'    => $response[ 'currentPage' ],
+			'nextPageNumber' => $response[ 'nextPageNumber' ],
 		];
 	}
 
@@ -145,24 +153,24 @@ class Search implements ShouldRespond {
 	 * exportControlClassificationNumberWAS: "NLR"
 	 * lifeCycleStatus: "Active"
 	 */
-	private function parseItem(array $item)
+	private function parseItem( array $item )
 	{
 		return [
-			'sku'                => $item['warehouseCode'] ?? null,
-			'name'               => $item['partNumber'] ?? null,
-			'description'        => $item['description'] ?? null,
-			'partNumber'         => $item['partNumber'] ?? null,
-			'external_id'        => (string) $item['itemId'] ?? null,
+			'sku'         => $item[ 'warehouseCode' ] ?? null,
+			'name'        => $item[ 'partNumber' ] ?? null,
+			'description' => $item[ 'description' ] ?? null,
+			'partNumber'  => $item[ 'partNumber' ] ?? null,
+			'external_id' => (string) $item[ 'itemId' ] ?? null,
 
-			'photo_ext_src'      => isset($item['urlData'][1]) ? $item['urlData'][1]['value'] : null,
-			'quantity'           => (int) $item['minOrderQuantity'] ?? null,
-			'min_order_quantity' => (int) $item['minOrderQuantity'] ?? null,
-			'unit_price'         => (float) isset($item['pricingTier'][0]) ? $item['pricingTier'][0]['resalePrice'] : 0,
-			'currency'           => $item['currency'] ?? 'EUR',
+			'photo_ext_src'      => isset($item[ 'urlData' ][ 1 ]) ? $item[ 'urlData' ][ 1 ][ 'value' ] : null,
+			'quantity'           => (int) $item[ 'minOrderQuantity' ] ?? null,
+			'min_order_quantity' => (int) $item[ 'minOrderQuantity' ] ?? null,
+			'unit_price'         => (float) isset($item[ 'pricingTier' ][ 0 ]) ? $item[ 'pricingTier' ][ 0 ][ 'resalePrice' ] : 0,
+			'currency'           => $item[ 'currency' ] ?? 'EUR',
 
-			'price_range'        => [],
-			'cart_amount'        => 1,
-			'cart_amount_max'    => 10,
+			'price_range'     => [],
+			'cart_amount'     => 1,
+			'cart_amount_max' => 10,
 
 		];
 	}

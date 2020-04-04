@@ -2,7 +2,8 @@
 
 namespace PartsSearch\Interfaces;
 
-interface ShouldRespond {
+interface ShouldRespond
+{
 
 	public function getResponse();
 
@@ -10,6 +11,6 @@ interface ShouldRespond {
 
 	public function setQuery();
 
-	public function collection(array $response);
+	public function collection( array $response );
 
 }

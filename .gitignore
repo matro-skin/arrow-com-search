@@ -1,3 +1,4 @@
+*.log
 /api/.env
 /api/.token*
 /api/composer.lock

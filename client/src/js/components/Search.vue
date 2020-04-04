@@ -86,8 +86,8 @@
 					let response = await this.load(driver),
 						items = response.data
 					this.items = [...this.items, ...items]
-					this.offset += items.length
 				}
+				this.offset += 10
 
 			},
 
