@@ -18,7 +18,7 @@
 	</div>
 
 	<!-- FOOTER -->
-	<script>const partsSearchConfig = { url: '/api', drivers: [ 'ArrowCom', 'Element14' ] }</script>
+	<script>const partsSearchConfig = { url: '/api', drivers: [ 'ArrowCom', 'Element14' ], input: false, instant: true }</script>
 	<script src="dist/js/partsSearch.js?t=<?php echo filemtime(__DIR__ . '/dist/js/partsSearch.js') ?>"></script>
 	<!-- / END -->
 
