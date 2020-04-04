@@ -1,8 +1,8 @@
-api/.env
-api/.token*
-api/composer.lock
-client/node_modules
-client/package-lock.json
-.idea
+/api/.env
+/api/.token*
+/api/composer.lock
+/client/node_modules
+/client/package-lock.json
+/.idea
 /client/npm-debug.log
 /client/debug.log
