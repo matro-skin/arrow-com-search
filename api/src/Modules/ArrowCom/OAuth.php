@@ -41,6 +41,8 @@ class OAuth
 		// if token not exists
 		if (! $this->token) {
 
+			\PartsSearch\Search::log('Empty token, requesting new one...');
+
 			// request token data
 			$this->requestToken();
 
