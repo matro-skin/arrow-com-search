@@ -47,14 +47,22 @@ class Search implements ShouldRespond
 
 		\PartsSearch\Search::log('Prepare request');
 
-		$request = new Request($this->url);
-		$request->setHeaders([
+		$headers = [
 			'Accept'        => 'application/json',
 			'Authorization' => sprintf("Bearer %s", $this->token->access_token),
-			'User-Agent'    => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36',
-		])->setQuery($this->getQuery());
+			'User-Agent'    => 'Mozilla/5.0',
+		];
+
+		$query = $this->getQuery();
+
+		$request = new Request($this->url);
+		$request->setHeaders($headers)->setQuery($query);
 
 		\PartsSearch\Search::log('Requesting...');
+
+		\PartsSearch\Search::log('Url: ' . $this->url);
+		\PartsSearch\Search::log('Headers: ' . json_encode($headers));
+		\PartsSearch\Search::log('Query: ' . json_encode($query));
 
 		$response = $request->getResponse();
 
