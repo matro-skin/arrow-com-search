@@ -3,6 +3,8 @@
 namespace PartsSearch\Helpers;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 
 class Request
 {
@@ -32,9 +34,17 @@ class Request
 		try {
 			$client   = new Client();
 			$response = $client->request($method, $this->url, $this->getOptions());
-		} catch (\Exception $e) {
-			// if request failed
-			Response::error($e->getMessage());
+		}
+//      catch (\Exception $e) {
+//			// if request failed
+//			Response::error($e->getMessage());
+//		}
+		catch (RequestException $e) {
+			$catched = Psr7\str($e->getRequest());
+			if ($e->hasResponse()) {
+				$responsed = Psr7\str($e->getResponse());
+			}
+			Response::error( $catched . PHP_EOL . $responsed);
 		}
 
 		$code = $response->getStatusCode();

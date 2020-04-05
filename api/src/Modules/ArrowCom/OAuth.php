@@ -17,7 +17,6 @@ class OAuth
 
 	public function __construct()
 	{
-
 		\PartsSearch\Search::log('Start Oauth');
 
 		try {
@@ -41,7 +40,7 @@ class OAuth
 		// if token not exists
 		if (! $this->token) {
 
-			\PartsSearch\Search::log('Empty token, requesting new one...');
+			\PartsSearch\Search::log('Empty token');
 
 			// request token data
 			$this->requestToken();
@@ -69,11 +68,13 @@ class OAuth
 
 		if (! file_exists($this->file)) {
 			$this->token = null;
+			\PartsSearch\Search::log('File not exists');
 
 			return;
 		}
 
 		if (time() - filemtime($this->file) > 3500) {
+			\PartsSearch\Search::log('File is expired');
 			$this->token = null;
 
 			return;
@@ -83,6 +84,7 @@ class OAuth
 		$this->token = json_decode($this->token);
 
 		if ($this->token->expires_at - time() < 0) {
+			\PartsSearch\Search::log('Token is expired');
 			$this->token = null;
 
 			return;
@@ -96,6 +98,8 @@ class OAuth
 	 */
 	private function requestToken()
 	{
+		\PartsSearch\Search::log('Request new token');
+
 		$request = new Request($this->url);
 
 		$request->setQuery([ 'grant_type' => 'client_credentials' ])
