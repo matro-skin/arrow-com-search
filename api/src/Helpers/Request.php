@@ -5,6 +5,7 @@ namespace PartsSearch\Helpers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
+use PartsSearch\Search;
 
 class Request
 {
@@ -41,8 +42,10 @@ class Request
 //		}
 		catch (RequestException $e) {
 			$catched = Psr7\str($e->getRequest());
+			Search::log($catched);
 			if ($e->hasResponse()) {
 				$responsed = Psr7\str($e->getResponse());
+				Search::log($responsed);
 			}
 			Response::error( $catched . PHP_EOL . $responsed);
 		}
